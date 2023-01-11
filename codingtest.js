@@ -2,6 +2,8 @@
 const URL = "https://eacp.energyaustralia.com.au/codingtest"
 const endpoint = "/api/v1/festivals"
 const statusCode = 200
+const festivalFields = "name,bands"
+const bandFields = "name,recordLabel"
 
 
 // GET request
@@ -37,19 +39,33 @@ for (let i = 0; i < festivals.length; i++) {
 	const festivalName = festival.name
 	const festivalBands = festival.bands
 	
-	console.assert(festival.hasOwnProperty("name") && festivalName != null && festivalName != '', 
-		"\nExpected festival to have a name and not be null or empty\nActual outcome: " + JSON.stringify(festival))
+	// verify schema/fields of festivals
+	console.assert(Object.keys(festival) == festivalFields,
+		"\nExpected fields for each festival ('name' and 'bands')\nActual: " + Object.keys(festival))
+	
+	// verify that both the festival 'name' key and value pair exists
+	console.assert(festivalName != null && festivalName != '', 
+		"\nExpected value for festival name to exist\nActual outcome: " + JSON.stringify(festival))
 		
-	console.assert(festival.hasOwnProperty("bands") && festivalBands != null && festivalBands != '', 
+	console.assert(festivalBands != null && festivalBands != '', 
 		"\nExpected each festival to have at least one band\nActual: " + JSON.stringify(festival))
 	
+	// loop over each band within that festival
 	for (let j = 0; j < festivalBands.length; j++) {
 		const festivalBand = festivalBands[j]
+		const festivalBandName = festivalBand.name
+		const festivalBandRecordLabel = festivalBand.recordLabel
 		
-		console.assert(festivalBand.hasOwnProperty("name") && festivalBand.name != null && festivalBand.name != '',
+		// verify schema/fields of bands
+		console.assert(Object.keys(festivalBand) == bandFields,
+			"\nExpected fields for each band ('name' and 'recordLabel')\nActual: " + Object.keys(festivalBand))
+		
+		// verify the band 'name' key and value exists
+		console.assert(festivalBandName != null && festivalBandName != '',
 			"\nExpected each band to have a name\nActual outcome: " + JSON.stringify(festivalBand))
-			
-		console.assert(festivalBand.hasOwnProperty("recordLabel") && festivalBand.recordLabel != null,
-			"\nExpected each band could have a record label\nActual outcome: " + JSON.stringify(festivalBand))
+		
+		// verify the 'recordLabel' value exists
+		console.assert(festivalBandRecordLabel != null,
+			"\nExpected each band could have a record label\nActual outcome: " + JSON.stringify(festivalBand))	
 	}
 }
